@@ -1,0 +1,64 @@
+CakePHP Facebook Plugin
+
+A CakePHP Plugin used for interfacing with the Facebook PHP SDK.
+
+For a full list of available methods and properties, please refer to the PHP SDK Overview here:
+
+http://developers.facebook.com/docs/reference/php/
+
+INSTALLATION
+------------
+
+1. Copy the plugin to app/Plugin/Facebook
+2. Enable the plugin in app/Config/bootstrap.php
+
+CONFIGURATION
+---------------
+
+In your controller:
+
+    public $components = array(
+        'Facebook.Facebook' => array(
+            'appId' => YOUR_FACEBOOK_APP_ID,
+            'appSecret' => YOUR_FACEBOOK_APP_SECRET
+        ),
+    );
+
+    public $helpers = array(
+        'Facebook.Facebook' => array(
+            'appId' => YOUR_FACEBOOK_APP_ID,
+            'appSecret' => YOUR_FACEBOOK_APP_SECRET
+        ),
+    );
+
+USAGE
+---------------
+
+The following example shows how to use the FacebookHelper::login method to
+create a Facebook login link.
+
+    echo $this->Facebook->login(__('Login with Facebook'), array(
+        'redirect_uri' => '/',
+        'scope' => array(
+            'email',
+            'user_interests',
+            'user_location'
+        )
+    ));
+
+The following example shows how to use the FacebookHelper::logout method to
+create a Facebook logout link.
+
+    echo $this->Facebook->logout(__('Logout'), array(
+        'next' => array(
+            'controller' => 'users',
+            'action' => 'logout'
+        )
+    ));
+
+The following example shows how to use the FacebookComponent to check if the
+user is logged in with Facebook and then get their data:
+
+    if ($this->Facebook->loggedIn()) {
+        $facebookUser = $this->Facebook->user();
+    }
