@@ -48,6 +48,13 @@ class FacebookComponent extends Component
     public $Facebook = null;
 
     /**
+     * Settings
+     *
+     * @var array
+     */
+    public $settings = array();
+
+    /**
      * Constructor
      *
      * @param ComponentCollection $collection A ComponentCollection this component can use to lazy load its components
@@ -62,21 +69,9 @@ class FacebookComponent extends Component
             'secret' => $settings['appSecret'],
         ));
         parent::__construct($collection, $settings);
-    }
-
-    /**
-     * API
-     *
-     * Call a Graph API method, FQL Query, or (DEPRECATED) REST API using the PHP SDK.
-     *
-     * @param mixed paramaters
-     * @return TODO
-     * @access public
-     * @link http://developers.facebook.com/docs/reference/php/facebook-api/
-     */
-    public function api()
-    {
-        return $this->Facebook->api();
+        unset($settings['appId']);
+        unset($settings['appSecret']);
+        $this->settings = $settings;
     }
 
     /**
@@ -84,7 +79,6 @@ class FacebookComponent extends Component
      *
      * Get the current access token being used by the SDK.
      *
-     * @return TODO
      * @access public
      * @link http://developers.facebook.com/docs/reference/php/facebook-getAccessToken/
      */
@@ -98,7 +92,6 @@ class FacebookComponent extends Component
      *
      * Get the App secret that the SDK is currently using.
      *
-     * @return TODO
      * @access public
      * @link http://developers.facebook.com/docs/reference/php/facebook-getAppSecret/
      */
@@ -112,9 +105,8 @@ class FacebookComponent extends Component
      *
      * Get the App ID that the SDK is currently using.
      *
-     * @return TODO
      * @access public
-     * @link LINK
+     * @link http://developers.facebook.com/docs/reference/php/facebook-getAppId/
      */
     public function getAppId()
     {
@@ -126,12 +118,12 @@ class FacebookComponent extends Component
      *
      * Returns a URL based on the userÕs login status on Facebook.
      *
-     * @return TODO
      * @access public
-     * @link LINK
+     * @link http://developers.facebook.com/docs/reference/php/facebook-getLoginStatusUrl/
      */
     public function getLoginStatusUrl($params = array())
     {
+        $params = array_merge($this->settings, $params);
         return $this->Facebook->getLoginStatusUrl($params);
     }
 
@@ -140,12 +132,15 @@ class FacebookComponent extends Component
      *
      * Get a URL that the user can click to login, authorize the app, and get redirected back to the app.
      *
-     * @return TODO
      * @access public
-     * @link LINK
+     * @link http://developers.facebook.com/docs/reference/php/facebook-getLoginUrl/
      */
     public function getLoginUrl($params = array())
     {
+        if (isset($params['redirect_uri'])) {
+            $params['redirect_uri'] = $this->Html->url($params['redirect_uri'], true);
+        }
+        $params = array_merge($this->settings, $params);
         return $this->Facebook->getLoginUrl($params);
     }
 
@@ -154,12 +149,15 @@ class FacebookComponent extends Component
      *
      * This method returns a URL that, when clicked by the user, will log them out of their Facebook session and then redirect them back to your application.
      *
-     * @return TODO
      * @access public
-     * @link LINK
+     * @link http://developers.facebook.com/docs/reference/php/facebook-getLogoutUrl/
      */
     public function getLogoutUrl($params = array())
     {
+        if (isset($params['next'])) {
+            $params['next'] = $this->Html->url($params['next'], true);
+        }
+        $params = array_merge($this->settings, $params);
         return $this->Facebook->getLogoutUrl($params);
     }
 
@@ -168,9 +166,8 @@ class FacebookComponent extends Component
      *
      * Get the current signed request being used by the SDK.
      *
-     * @return TODO
      * @access public
-     * @link LINK
+     * @link http://developers.facebook.com/docs/reference/php/facebook-getSignedRequest/
      */
     public function getSignedRequest()
     {
@@ -182,101 +179,13 @@ class FacebookComponent extends Component
      *
      * This method returns the Facebook User ID of the current user, or 0 if there is no logged-in user.
      *
-     * @return TODO
      * @access public
-     * @link LINK
+     * @link http://developers.facebook.com/docs/reference/php/facebook-getUser/
      */
     public function getUser()
     {
         return $this->Facebook->getUser();
     }
-
-    /**
-     * Set Access Token
-     *
-     * Set the current access token being used by the SDK.
-     *
-     * @return TODO
-     * @access public
-     * @link LINK
-     */
-    public function setAccessToken($accessToken)
-    {
-        return $this->Facebook->setAccessToken($accessToken);
-    }
-
-    /**
-     * Set Api Secret
-     *
-     * Set the App secret that the SDK is currently using.
-     *
-     * @return TODO
-     * @access public
-     * @link LINK
-     */
-    public function setApiSecret($appSecret)
-    {
-        return $this->Facebook->setApiSecret($appSecret);
-    }
-
-    /**
-     * Set App ID
-     *
-     * Set the App ID that the SDK is currently using.
-     *
-     * @return TODO
-     * @access public
-     * @link LINK
-     */
-    public function setAppId($appId)
-    {
-        return $this->Facebook->setAppId($appId);
-    }
-
-    /**
-     * Set File Upload Support
-     *
-     * Set file upload support in the SDK.
-     *
-     * @return TODO
-     * @access public
-     * @link LINK
-     */
-    public function setFileUploadSupport($fileUploadSupport)
-    {
-        return $this->Facebook->setFileUploadSupport($fileUploadSupport);
-    }
-
-    /**
-     * Use File Upload Support
-     *
-     * Get whether file upload support has been enabled in the SDK.
-     *
-     * @return TODO
-     * @access public
-     * @link LINK
-     */
-    public function useFileUploadSupport()
-    {
-        return $this->Facebook->useFileUploadSupport();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * ID
@@ -301,6 +210,71 @@ class FacebookComponent extends Component
     public function loggedIn()
     {
         return ($this->id()) ? true : false;
+    }
+
+    /**
+     * Set Access Token
+     *
+     * Set the current access token being used by the SDK.
+     *
+     * @access public
+     * @link http://developers.facebook.com/docs/reference/php/facebook-setAccessToken/
+     */
+    public function setAccessToken($accessToken)
+    {
+        return $this->Facebook->setAccessToken($accessToken);
+    }
+
+    /**
+     * Set Api Secret
+     *
+     * Set the App secret that the SDK is currently using.
+     *
+     * @access public
+     * @link http://developers.facebook.com/docs/reference/php/facebook-setAppSecret/
+     */
+    public function setApiSecret($appSecret)
+    {
+        return $this->Facebook->setApiSecret($appSecret);
+    }
+
+    /**
+     * Set App ID
+     *
+     * Set the App ID that the SDK is currently using.
+     *
+     * @access public
+     * @link http://developers.facebook.com/docs/reference/php/facebook-setAppId/
+     */
+    public function setAppId($appId)
+    {
+        return $this->Facebook->setAppId($appId);
+    }
+
+    /**
+     * Set File Upload Support
+     *
+     * Set file upload support in the SDK.
+     *
+     * @access public
+     * @link http://developers.facebook.com/docs/reference/php/facebook-setFileUploadSupport/
+     */
+    public function setFileUploadSupport($fileUploadSupport)
+    {
+        return $this->Facebook->setFileUploadSupport($fileUploadSupport);
+    }
+
+    /**
+     * Use File Upload Support
+     *
+     * Get whether file upload support has been enabled in the SDK.
+     *
+     * @access public
+     * @link http://developers.facebook.com/docs/reference/php/facebook-getFileUploadSupport/
+     */
+    public function useFileUploadSupport()
+    {
+        return $this->Facebook->useFileUploadSupport();
     }
 
     /**
