@@ -31,6 +31,20 @@ In your controller:
         ),
     );
 
+You can also pass more configuration options as defaults. For example:
+
+    public $helpers = array(
+        'Facebook.Facebook' => array(
+            'appId' => YOUR_FACEBOOK_APP_ID,
+            'appSecret' => YOUR_FACEBOOK_APP_SECRET,
+            'scope' => array(
+                'email',
+                'user_interests',
+                'user_location',
+            ),
+        ),
+    );
+
 USAGE
 ---------------
 
@@ -45,6 +59,10 @@ create a Facebook login link.
             'user_location'
         )
     ));
+
+NOTE: In the above example, if you've already specified the scope in you configuration options, you don't need to specify it here. For example:
+
+    echo $this->Facebook->login(__('Login with Facebook'), array('redirect_uri' => '/'));
 
 The following example shows how to use the FacebookHelper::logout method to
 create a Facebook logout link.
