@@ -82,6 +82,20 @@ class FacebookHelper extends AppHelper
     }
 
     /**
+     * API
+     *
+     * This method can call a Facebook Graph API method, an FQL query, or a
+     * (DEPRECATED) REST API method, depending on the parameters passed in.
+     *
+     * @access public
+     * @link http://developers.facebook.com/docs/reference/php/facebook-api/
+     */
+    public function api($method = null)
+    {
+        return $this->Facebook->api($method);
+    }
+
+    /**
      * Get Access Token
      *
      * Get the current access token being used by the SDK.
