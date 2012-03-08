@@ -152,7 +152,7 @@ class FacebookComponent extends Component
     public function getLoginUrl($params = array())
     {
         if (isset($params['redirect_uri'])) {
-            $params['redirect_uri'] = $this->Html->url($params['redirect_uri'], true);
+            $params['redirect_uri'] = Router::url($params['redirect_uri'], true);
         }
         $params = array_merge($this->settings, $params);
         return $this->Facebook->getLoginUrl($params);
@@ -169,7 +169,7 @@ class FacebookComponent extends Component
     public function getLogoutUrl($params = array())
     {
         if (isset($params['next'])) {
-            $params['next'] = $this->Html->url($params['next'], true);
+            $params['next'] = Router::url($params['next'], true);
         }
         $params = array_merge($this->settings, $params);
         return $this->Facebook->getLogoutUrl($params);
