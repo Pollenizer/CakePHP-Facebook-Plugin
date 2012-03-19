@@ -4,12 +4,12 @@ A CakePHP Plugin used for interfacing with the Facebook PHP SDK.
 
 For a full list of available methods and properties, please refer to the [Facebook PHP SDK Overview](http://developers.facebook.com/docs/reference/php/)
 
-## INSTALLATION
+## Installation
 
 1.   Copy the plugin to ``app/Plugin/Facebook``
 1.   Enable the plugin in ``app/Config/bootstrap.php``
 
-## CONFIGURATION
+## Configuration
 
 In your controller:
 
@@ -27,7 +27,7 @@ In your controller:
         )
     );
 
-## USAGE
+## Usage
 
 The following example shows how to use the ``FacebookHelper::getLoginUrl`` method to create a Facebook login link.
 
