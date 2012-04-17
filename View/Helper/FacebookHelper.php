@@ -80,6 +80,11 @@ class FacebookHelper extends AppHelper
      */
     public function __construct(View $View, $settings = array())
     {
+        if (empty($settings)) {
+            Configure::load('facebook');
+            $settings = Configure::read('Facebook');
+        }
+
         $this->Facebook = new Facebook(array(
             'appId'  => $settings['appId'],
             'secret' => $settings['appSecret'],
