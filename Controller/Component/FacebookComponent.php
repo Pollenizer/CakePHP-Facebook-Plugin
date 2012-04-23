@@ -57,10 +57,8 @@ class FacebookComponent extends Component
         if ($count == 0) {
             return $this->Facebook->$name();
         }
-        if ($count == 1) {
-            return $this->Facebook->$name($arguments[0]);
-        }
-        return $this->Facebook->$name(implode(', ', $arguments));
+
+        return call_user_func_array(array($this->Facebook, $name), $arguments);
     }
 
     /**
